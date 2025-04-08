@@ -1,0 +1,8 @@
+streamlit
+openai
+crewAI
+langchain
+youtube-transcript-api
+fpdf2
+langchain-openai
+langchain-community
