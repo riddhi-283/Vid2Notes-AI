@@ -12,15 +12,21 @@ with st.sidebar:
     confirm = st.button("Confirm")
 
 if confirm and youtube_url:
+    st.success("URL received!")
+
     try:
         with st.spinner("🔍 Extracting transcript..."):
             raw_transcript = extract_transcript(youtube_url)
+            print("raw_transcript creation done!")
+            # print("\n")
 
         with st.spinner("🧠 Running CrewAI to generate notes..."):
             formatted_notes = run_lecture_note_crew(raw_transcript)
+            print("Notes creation done!")
 
         with st.spinner("📄 Generating PDF..."):
             pdf_path = generate_pdf_from_text(formatted_notes)
+            print("PDF creation done!")
 
         st.success("✅ Notes generated successfully!")
         with open(pdf_path, "rb") as f:
@@ -33,3 +39,6 @@ if confirm and youtube_url:
 
     except Exception as e:
         st.error(f"❌ Error: {e}")
+
+# else:
+#     st.warning("Please input a valid YouTube URL and click Confirm.")

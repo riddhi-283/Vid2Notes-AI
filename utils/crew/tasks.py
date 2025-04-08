@@ -1,3 +1,8 @@
+from pydantic import BaseModel
+
+class NoteOutput(BaseModel):
+    notes: str
+
 from crewai import Task
 from .agents import note_agent
 
@@ -8,5 +13,6 @@ def get_note_task(transcript_text):
             f"Transcript:\n{transcript_text}"
         ),
         expected_output="Well-structured, grammatically correct, and formatted notes",
-        agent=note_agent
+        agent=note_agent,
+        output_json=NoteOutput
     )
