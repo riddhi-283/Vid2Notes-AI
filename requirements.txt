@@ -6,3 +6,7 @@ youtube-transcript-api
 fpdf2
 langchain-openai
 langchain-community
+pdfplumber
+weasyprint
+langchain-google-genai 
+google-generativeai

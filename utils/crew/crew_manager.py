@@ -1,6 +1,6 @@
 from crewai import Crew
-from .tasks import get_note_task
-from .agents import note_agent  # Needed for crew creation
+from .tasks import get_note_task, get_html_format_task
+from .agents import note_agent, formatting_agent  # Needed for crew creation
 import streamlit as st
 import json
 
@@ -14,12 +14,8 @@ def run_lecture_note_crew(transcript_text: str) -> str:
     )
 
     result = crew.kickoff()
-    # print(dir(result))
-    # print(type(result))
-    # print("\n")
-    # print(result)
-
-     # 👇 Check its dict representation
+    
+    # Check its dict representation
     if hasattr(result, "to_dict"):
         result_dict = result.to_dict()
     elif hasattr(result, "return_values") and isinstance(result.return_values, dict):
@@ -36,6 +32,27 @@ def run_lecture_note_crew(transcript_text: str) -> str:
     if not notes:
         st.error("❌ Notes were not generated properly.")
     else:
-        st.text_area("📝 Generated Notes", notes, height=500)
+        st.write("📝 Generated Notes\n")
+        st.write(notes)
 
     return notes
+
+#  NEW FUNCTION: For Gemini-Powered HTML formatting
+def run_html_formatter_crew(plain_text_notes: str) -> str:
+    task = get_html_format_task(plain_text_notes)
+
+    crew = Crew(
+        agents=[formatting_agent],
+        tasks=[task],
+        verbose=False
+    )
+
+    result = crew.kickoff()
+
+    # Handle result extraction safely
+    if hasattr(result, "return_values") and isinstance(result.return_values, dict):
+        return result.return_values.get("output") or result.return_values.get("notes")
+    elif hasattr(result, "output"):
+        return result.output
+    else:
+        return str(result)  # fallback
