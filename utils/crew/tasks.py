@@ -4,7 +4,7 @@ class NoteOutput(BaseModel):
     notes: str
 
 from crewai import Task
-from .agents import note_agent, formatting_agent
+from .agents import note_agent, formatting_agent, qa_agent
 
 
 def get_note_task(transcript_text):
@@ -19,6 +19,16 @@ def get_note_task(transcript_text):
         expected_output="Well-structured, grammatically correct, and formatted notes with a final summary section in markdown format",
         agent=note_agent,
         output_json=NoteOutput
+    )
+
+def get_qa_task(user_query: str):
+    return Task(
+        description=(
+            f"Answer the following question in a helpful, clear and descriptive way:\n\n"
+            f"User: {user_query}"
+        ),
+        expected_output="A clear, descriptive and factually correct answer.",
+        agent=qa_agent
     )
 
 def get_html_format_task(notes_text):

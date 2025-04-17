@@ -8,11 +8,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 llm = ChatOpenAI(model="gpt-4o", temperature=0.3)
-gemini_llm = ChatGoogleGenerativeAI(
-    model="gemini-2.0-flash-001",
-    temperature=0,
-    convert_system_message_to_human=True
-)
+# gemini_llm = ChatGoogleGenerativeAI(
+#     model="gemini-2.0-flash-001",
+#     temperature=0,
+#     convert_system_message_to_human=True
+# )
 
 note_agent = Agent(
     role="Lecture Note Expert",
@@ -28,7 +28,17 @@ formatting_agent = Agent(
     role="HTML Formatter",
     goal="Transform plain text lecture notes into structured HTML with table of contents and proper formatting.",
     backstory="You are an expert in HTML document design and formatting. You use semantic HTML tags but never alters content, only beautifies it.",
-    llm=gemini_llm,
+    llm=llm,
     verbose=True,
     memory=True,
+)
+
+qa_agent = Agent(
+    role="Educational Assistant",
+    goal="Answer all the questions asked by user in detail using your best knowledge.",
+    backstory=(
+        """You're a friendly and helpful AI assistant built to help users with everyday queries, explanations, and academic guidance. You're always helpful, concise, and clear."""
+    ),
+    llm=llm,
+    verbose=True
 )

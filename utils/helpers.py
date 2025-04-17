@@ -30,26 +30,6 @@ def extract_transcript(video_url: str) -> str:
     full_text = " ".join([segment['text'] for segment in transcript])
     return full_text
 
-def generate_pdf_from_text(formatted_text: str, file_path: str = "lecture_notes.pdf") -> str:
-    c = canvas.Canvas(file_path, pagesize=letter)
-    width, height = letter
-    margin = 40
-    y = height - margin
-    max_width = 90  # Number of characters per line (adjust as needed)
-
-    # Wrap the text
-    lines = formatted_text.split("\n")
-    for line in lines:
-        wrapped_lines = wrap(line, width=max_width)
-        for wrapped_line in wrapped_lines:
-            if y <= margin:
-                c.showPage()
-                y = height - margin
-            c.drawString(margin, y, wrapped_line)
-            y -= 15
-
-    c.save()
-    return file_path
 
 ## only for checking
 # if __name__ == "__main__":

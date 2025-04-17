@@ -1,6 +1,6 @@
 from crewai import Crew
-from .tasks import get_note_task, get_html_format_task
-from .agents import note_agent, formatting_agent  # Needed for crew creation
+from .tasks import get_note_task, get_html_format_task, get_qa_task
+from .agents import note_agent, formatting_agent, qa_agent  # Needed for crew creation
 import streamlit as st
 import json
 
@@ -37,7 +37,7 @@ def run_lecture_note_crew(transcript_text: str) -> str:
 
     return notes
 
-#  NEW FUNCTION: For Gemini-Powered HTML formatting
+#  Function for AI-Powered HTML formatting for creating beautiful pdfs
 def run_html_formatter_crew(plain_text_notes: str) -> str:
     task = get_html_format_task(plain_text_notes)
 
@@ -55,4 +55,17 @@ def run_html_formatter_crew(plain_text_notes: str) -> str:
     elif hasattr(result, "output"):
         return result.output
     else:
-        return str(result)  # fallback
+        return str(result) 
+
+# Function for handling queries asked by user 
+def run_qa_agent(user_query: str) -> str:
+    task = get_qa_task(user_query)
+
+    crew = Crew(
+        agents=[qa_agent],
+        tasks=[task],
+        verbose=False
+    )
+
+    result = crew.kickoff()
+    return result.output if hasattr(result, "output") else result.return_values.get("output", None)
